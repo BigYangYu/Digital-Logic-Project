@@ -39,26 +39,26 @@ module ManualDrivingMode(
      wire [7:0] in = {2'b10, destroy_barrier_signal, place_barrier_signal, ~turn_right_signal, ~turn_left_signal, ~move_backward_signal, ~move_forward_signal};
      reg[1:0] state,next_state;
     parameter  unstarting=2'b00, starting=2'b01, moving=2'b10,poweroff=2'b11;
-      always@(posedge clk or posedge rst ) begin
+      always@(* ) begin
    if(~rst)begin
-            state<= unstarting;
+            state= unstarting;
             end
             else begin    
           case (state)
-unstarting:if(throttle&&~clutch) next_state<=poweroff;
-           else if(clutch&&throttle&&~brake) next_state<=starting;
-           else next_state<=unstarting;
-starting:if(brake) next_state<=unstarting;
-         else if(throttle&&~clutch)next_state<=moving ;
-         else next_state<=starting;
-moving: if(brake) next_state<=unstarting;
-        else if(~throttle) next_state<=starting;
-        else if(clutch) next_state<=starting;
-        else if(~move_backward_signal&&~clutch)next_state<=poweroff;
-        else next_state<=moving;
+unstarting:if(throttle&&~clutch) next_state=poweroff;
+           else if(clutch&&throttle&&~brake) next_state=starting;
+           else next_state=unstarting;
+starting:if(brake) next_state=unstarting;
+         else if(throttle&&~clutch)next_state=moving ;
+         else next_state=starting;
+moving: if(brake) next_state=unstarting;
+        else if(~throttle) next_state=starting;
+        else if(clutch) next_state=starting;
+        else if(~move_backward_signal&&~clutch)next_state=poweroff;
+        else next_state=moving;
     endcase  
-  end
-  end
+  endcase
+  endcase
 //状态切换
 always@(*)begin
     case(state)
