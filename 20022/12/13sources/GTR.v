@@ -34,7 +34,9 @@ module GTR(
     input move_forward,//前进
     input move_backward,//后退
     // 
-    input [1:0]mode_selection,//选择模式按钮
+    input manul_mode,//选择模式按钮
+    input semi_auto_mode;
+    input auto_mode;
     output turn_left_light,//左转向灯
     output turn_right_light,//右转向灯
     output [7:0] seg_selection,//八个流水灯开关
@@ -56,15 +58,14 @@ reg place_barrier_signal;//放置障碍信号
 reg destroy_barrier_signal;//破坏障碍信号，这俩我还不知道干啥用的
 parameter power_on =1'b1,power_0ff=1'b0 ;
 
-always @(*) begin
 power_state=power_0ff;
-end
 always @(posedge clk) begin
-//开启要长按1s，我还不会QAQ
+    //press for more than 1 s
+    
 end
 
 reg [1:0] mode;//驾驶模式,01为手动，10为半自动，11为全自动
-always @(mode_selection) begin
+always @(*) begin
 if(power_state==1'b0) begin
 mode=2'b00;
 end
