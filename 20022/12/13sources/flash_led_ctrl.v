@@ -18,7 +18,7 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-module flash_led_ctrl(
+module flash_led_ctrl(//流水灯模块
     input clk,
     input rst_n,
     input dir,

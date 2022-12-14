@@ -23,8 +23,8 @@
 module record_manual(//我设计的是每0.5s里程加一，缺点是如果没到0.5s就断电，里程表仍然会加一（我觉得应该不是什么问题）
                         input clk,
                          input rst,
-                         input power_now,
-                         input [3:0] state,
+                         input power_now,//必须是通电状态才有效
+                         input [3:0] state,//输入手动挡的状态
                          output reg[26:0] record   );
         wire clk_2hz;
         reg[26:0] cur;
@@ -42,7 +42,7 @@ module record_manual(//我设计的是每0.5s里程加一，缺点是如果没�
                 record<=cur;
         end
 
-        always@(negedge clk_2hz,negedge ~rst,negedge ~power_now)begin
+        always@(negedge clk_2hz,negedge ~rst)begin
            if(~rst||~power_now||record<=27'd9999_9999)begin
                 cur<=0;
             end

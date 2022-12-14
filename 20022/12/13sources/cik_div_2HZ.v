@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module cik_div_2HZ(input clk,rst,enable,output reg clk_2HZ  );
+module cik_div_2HZ(input clk,rst,enable,output reg clk_2HZ  );//0信号使能，2hz分频器
 parameter  period = 50_000000;
 
 reg [25:0] div2hz_cnt;

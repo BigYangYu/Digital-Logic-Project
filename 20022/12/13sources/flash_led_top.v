@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module flash_led_top(
+module flash_led_top(//里程显示
     input clk,
     input rst_n,
     input power_now,
@@ -61,7 +61,7 @@ module flash_led_top(
         led2 = (record%100)/10;
         led1 = record%10;
   end
-      always @(posedge clk) begin//复位和断电状态就让板子灯熄灭
+      always @(posedge clk,posedge ~rst_n ) begin//复位和断电状态就让板子灯熄灭
         if (~rst_n&&power_now) begin
           led <= 8'b0000_0000;
           in1 <=8'b1111_1100; //0
