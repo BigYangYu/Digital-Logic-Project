@@ -39,3 +39,12 @@ set_property IOSTANDARD LVCMOS33 [get_ports place_barrier_signal]
 
 set_property PACKAGE_PIN M4 [get_ports destroy_barrier_signal]
 set_property IOSTANDARD LVCMOS33 [get_ports destroy_barrier_signal]
+
+set_property PACKAGE_PIN S5 [get_ports power_on]
+set_property PACKAGE_PIN S6 [get_ports power_off]
+set_property PACKAGE_PIN N4 [get_ports mode_signal1]
+set_property PACKAGE_PIN R1 [get_ports mode_signal2]
+set_property IOSTANDARD LVCMOS33 [get_ports power_on]
+set_property IOSTANDARD LVCMOS33 [get_ports power_off]
+set_property IOSTANDARD LVCMOS33 [get_ports mode_signal1]
+set_property IOSTANDARD LVCMOS33 [get_ports mode_signal2]
