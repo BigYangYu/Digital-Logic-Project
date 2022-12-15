@@ -1,33 +1,76 @@
 module global_state (input sys_clk,
+                     input rst_n,
+                     input throttle,            //油门
+                     input clutch,              //离合
+                     input brake,
+                     input reverse,             //倒车
                      input rx,
                      output tx,
                      input turn_left_signal,
                      input turn_right_signal,
-                     input move_forward_signal,
-                     input move_backward_signal,
-                     input place_barrier_signal,
-                     input destroy_barrier_signal,
-                     output front_detector,
-                     output back_detector,
-                     output left_detector,
-                     output right_detector,
-                     // above are the input and output in the module SimulatedDevice.
-                     // below are NEW input and output created by hfm.
-                     // The constraints have been added.
-                     // use 2 buttons on the left side of the board to control power on/off.
-                     // use the far left 2 switches to choose modes.
+                     inout move_forward_signal,
+                     output reg power_on_led,
+                     output reg [2:0] mode_led,
+                     output left_led,
+                     output right_led,
                      input power_on,
                      input power_off,
-                     input mode_signal1,
-                     input mode_signal2);
+                     input [1:0] mode_signal,
+                     output [7:0] seg_enable,
+                     output[7:0] seg_led1,
+                     output [7:0] seg_led2);
     // reg or wire?
     reg debounced_power_on;
+    reg [3:0] answer; //依次输出左转，右转，后退，前进信号
+    reg [3:0] state;
+    reg power_now;
+    reg [26:0] record;
+    reg back_detector;
+    reg left_detector;
+    reg front_detector;
+    reg right_detector;
     debouncer d0(power_on,sys_clk,debounced_power_on);
     always @(*) begin
         casex ({debounced_power_on,power_off})
-            2'b10: mode_choose ch0()
+            2'b10:
+            begin
+                power_on_led = 1;
+                casex (mode_signal)
+                    2'b00:
+                    begin
+                        mode_led[0] = 0;
+                        mode_led[1] = 0;
+                        mode_led[2] = 0;
+                    end
+                    2'b01:
+                    // the manual mode is on.
+                    begin
+                        mode_led[0] = 1;
+                        mode_led[1] = 0;
+                        mode_led[2] = 0;
+                        ManualDrivingMode manual_top(sys_clk,rst_n,debounced_power_on,throttle,clutch,brake,reverse,turn_left_signal,turn_right_signal,answer,state,power_now);
+                        turn_right_signal turn(rst_n,sys_clk,power_now,state,answer,left_led,right_led);
+                        record_manual record(sys_clk,rst_n,power_now,state,record);
+                        flash_led_top cnt(sys_clk,rst_n,power_now,1'b1,record,seg_enable,seg_led1,seg_led2);
+                        // the module_choose should be deleted.
+                        SimulatedDevice sim(sys_clk,rx,tx,rst_n,answer[3],answer[2],answer[0],answer[1],front_detector,back_detector,left_detector,right_detector)    // NOT revised the bug in simulation.
+                    end
+                    2'b10:
+                    begin
+                        mode_led[0] = 0;
+                        mode_led[1] = 1;
+                        mode_led[2] = 0;
+                    end
+                    2'b11:
+                    begin
+                        mode_led[0] = 0;
+                        mode_led[1] = 0;
+                        mode_led[2] = 1;
+                    end
+                endcase
+            end
             // 10 is the state when power on.
-            default:
+            default: power_on_led = 0;
         endcase
     end
 endmodule
@@ -63,14 +106,14 @@ endmodule
         end
     endmodule
         module debouncer_clk_div (
-            input sys_clk;
-            output debouncer_divclk;
+            input sys_clk,
+            output debouncer_divclk
             );
             reg[31:0] cnt        = 0;
             reg debouncer_divclk = 0;
             always@(posedge sys_clk)//1000HZ
             begin
-                if (cnt == 26'd50000)
+                if (cnt == 32'd50000)
                 begin
                     debouncer_divclk <= ~debouncer_divclk;
                     cnt              <= 0;
@@ -80,23 +123,6 @@ endmodule
             end
         endmodule
             
-            // module to choose mode.
-            module mode_choose (
-                input mode_signal1,
-                input mode_signal2);
-                always @(*) begin
-                    casex ({mode_signal1,mode_signal2})
-                        2'b00:
-                        2'b01:
-                        2'b1x:
-                    endcase
-                end
-            endmodule
-                
-                module display (
-                    
-                    );
-                    
-                endmodule
-                    
-                    
+            
+            
+            
