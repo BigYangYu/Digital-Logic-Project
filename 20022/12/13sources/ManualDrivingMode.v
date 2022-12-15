@@ -36,15 +36,15 @@ module ManualDrivingMode(
         reg [3:0] state1= 4'b0001;
     parameter unstarting=4'b0001, starting=4'b0010, moving=4'b0100,power_off=4'b1000;
 always @(posedge clk ,negedge rst) begin
-         if(~rst)begin
+         if(rst)begin
               state1<= 4'b0001;
-              answer<=4'b0000;
-              power_now=0;
+              power_now<=0;
               end
        else if(power_input==1'b0)begin
           case(state1)
          4'b0001:casex({clutch,throttle,brake,reverse})//未启动
                         4'b000X : state1<=unstarting;
+                        4'b001X : state1<=unstarting;
                         4'b010X : state1<=power_off;
                         4'b011X : state1<=unstarting;
                         4'b10XX : state1<=unstarting;
@@ -85,6 +85,8 @@ always @(posedge clk ,negedge rst) begin
         4'b1000:casex({clutch,throttle,brake,reverse})
                         4'bXXXX : state1<=power_off;
                endcase
+         default :
+                 state1<=unstarting;
           endcase
           power_now<=state1[3];
           end
@@ -98,7 +100,7 @@ always @(state1,turn_left_signal,turn_right_signal,reverse)begin
        case(state1)
        unstarting:casex({turn_right_signal,turn_left_signal,reverse})
                         3'bXXX :answer=4'b0000;
-       endcase      
+                    endcase      
        starting:casex({turn_right_signal,turn_left_signal,reverse})
                         3'b00X :answer=4'b0000;
                         3'b10X :answer=4'b1000;
@@ -117,7 +119,8 @@ always @(state1,turn_left_signal,turn_right_signal,reverse)begin
        endcase
        power_off:casex({turn_right_signal,turn_left_signal,reverse})
                         3'bXXX :answer=4'b0000;
-     
+      default :
+                answer=4'b0000;
        endcase
        endcase
     end
