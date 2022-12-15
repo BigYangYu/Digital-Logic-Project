@@ -35,8 +35,8 @@ module GTR(
     input move_backward,//后退
     // 
     input manul_mode,//选择模式按钮
-    input semi_auto_mode;
-    input auto_mode;
+    input semi_auto_mode,
+    input auto_mode,
     output turn_left_light,//左转向灯
     output turn_right_light,//右转向灯
     output [7:0] seg_selection,//八个流水灯开关
