@@ -27,7 +27,7 @@ module flash_led_ctrl(//流水灯模块
     );
     always@(posedge clk or negedge rst_n)
         if( !rst_n )
-            led <= 8'h80;
+            led <= 8'h80;z
         else
             case( dir )
                 1'b0:
