@@ -33,36 +33,39 @@ always @ (posedge clk) begin
                     3'b100: state<=2'b00;
                     3'b010: state<=2'b00;
                     3'b001: state<=2'b00;
-                    default: {move_forward_signal,turn_left_signal,turn_right_signal}=3'b100;
                 endcase
-        2'b01: if(cnt==32'b1_000_000) begin
+        2'b01: if(cnt==32'd1_000_000) begin
                     state<=2'b11;
                     cnt<=0;
                 end
                 else 
                     cnt<=cnt+1'b1;
-        2'b10: if(cnt==32'b1_000_000) begin
+        2'b10: if(cnt==32'd1_000_000) begin
                     state<=2'b11;
                     cnt<=0;
                 end
                 else
                     cnt<=cnt+1'b1;
-        2'b00: cnt<=0;
-    endcase
-end
-
-
-always @(state,go_straight_command,turn_left_command,turn_right_command) begin
-    case(state)
-        2'b00: case({go_straight_command,turn_left_command,turn_right_command})
+        2'b00: begin
+                cnt<=0;
+                case({go_straight_command,turn_left_command,turn_right_command})
                     3'b100: 
                         state=2'b11;
                     3'b010: 
                         state=2'b01;
                     3'b001: 
                         state=2'b10;
-                    // default: state=2'b00;
+                    default: state=2'b00;
                 endcase
+            end
+    endcase
+end
+
+
+always @(state,go_straight_command,turn_left_command,turn_right_command) begin
+    case(state)
+        2'b00: 
+             {move_forward_signal,turn_left_signal,turn_right_signal}=3'b000;
         2'b01: 
             {move_forward_signal,turn_left_signal,turn_right_signal}=3'b010;
         2'b10: 
