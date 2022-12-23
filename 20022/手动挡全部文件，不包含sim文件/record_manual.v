@@ -24,8 +24,8 @@ module record_manual(//我设计的是每0.5s里程加一
         
                         input clk,
                          input rst,
-                         input power_now,//必须是通电状态才有效
-                         input [3:0] state,//输入手动挡的状态
+                         input power_now,//必须是�?�电状�?�才有效
+                         input [3:0] state,//输入手动挡的状�??
                          output reg[26:0] record   );
         wire clk_2hz;
         cik_div_2HZ manual_record(
@@ -34,7 +34,7 @@ module record_manual(//我设计的是每0.5s里程加一
                                     .clk_2HZ(clk_2hz)
         );
 
-     always@(negedge clk_2hz )begin
+     always@(negedge clk_2hz , posedge rst)begin
            if(rst||power_now||record==27'd999_9999)begin
                 record<=0;
             end

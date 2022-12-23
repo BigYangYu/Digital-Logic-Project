@@ -18,14 +18,14 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-module flash_led_ctrl(//流水灯模块
+module flash_led_ctrl(//流水灯模�??
     input clk,
     input rst_n,
     input clk_bps,
     input power_now,
     input state1,
     input [26:0] record,
-    output reg [7:0] led,//八个灯的使能，用流水灯
+    output reg [7:0] led,//八个灯的使能，用流水�??
     output [7:0] seg_led1,
     output [7:0] seg_led2
     );
@@ -34,7 +34,7 @@ module flash_led_ctrl(//流水灯模块
     reg[3:0] cur1,cur2;
     light_7seg_ego ego1(.sw(cur1),.rst(rst_n),.seg_out(seg_led1));
     light_7seg_ego ego2(.sw(cur2),.rst(rst_n),.seg_out(seg_led2));
-    always@(posedge clk or negedge rst_n)
+    always@(posedge clk or posedge rst_n)
         if( rst_n||power_now )
             led <= 8'h80;
         else  

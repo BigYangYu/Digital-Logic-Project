@@ -21,6 +21,8 @@
 
 
 module GTR(
+                     input power_on,
+
     input clk, //bind to P17 pin (100MHz system clock)
     input rx, //bind to N5 pin
     output tx, //bind to T4 pin
@@ -31,39 +33,39 @@ module GTR(
     input brake,//刹车
     input turn_left,//左转
     input turn_right,//右转
-    input move_backward,//后退
+    input move_backward,//后�??
     // 
     output turn_left_light,//左转向灯
     output turn_right_light,//右转向灯
-    output [7:0] seg_en,//八个流水灯开关
-    output [7:0] seg_out0,//左边四个流水灯
-    output [7:0] seg_out1,//右边四个流水灯
+    output [7:0] seg_en,//八个流水灯开�?
+    output [7:0] seg_out0,//左边四个流水�?
+    output [7:0] seg_out1,//右边四个流水�?
     output [3:0] answer,
     output  [3:0] state ,
    output   power_now
     );
    // Global states
-reg power_state;//电源状态
-//各个模式的输出，绑定在simulate的输入
-wire front_detector;//前障碍检测
-wire back_detector;//右障碍检测
-wire left_detector;//左障碍检测
-wire right_detector;//右障碍检测
+reg power_state;//电源状�??
+//各个模式的输出，绑定在simulate的输�?
+wire front_detector;//前障碍检�?
+wire back_detector;//右障碍检�?
+wire left_detector;//左障碍检�?
+wire right_detector;//右障碍检�?
 reg turn_left_signal;//左转信号
 reg turn_right_signal;//右转信号
 reg move_forward_signal;//前进信号
-reg move_backward_signal;//后退信号
+reg move_backward_signal;//后�??信号
 reg place_barrier_signal;//放置障碍信号
 reg destroy_barrier_signal;//破坏障碍信号，这俩我还不知道干啥用的
-//  wire [3:0]answer;//依次输出左转，右转，后退，前进信号
+//  wire [3:0]answer;//依次输出左转，右转，后�??，前进信�?
 //  wire  [3:0] state;
- //输出小车当前状态0是通电，1是断电
+ //输出小车当前状�??0是�?�电�?1是断�?
  wire [26:0] record;
-parameter power_on =1'b1,power_0ff=1'b0 ;
+//parameter power_on =1'b1,power_0ff=1'b0 ;
 ManualDrivingMode fk(
                     .clk(clk),
                     .rst(rst),
-                    .power_input(1'b0),
+                    .power_input(power_on),
                     .throttle(throttle),
                     .clutch(clutch),
                     .brake(brake),
