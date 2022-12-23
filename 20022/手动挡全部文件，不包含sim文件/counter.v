@@ -18,20 +18,20 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-module counter(//流水灯模块，相当于分频
+module counter(//流水灯模块，相当于分�?
 input clk,
 input rst_n,
 output clk_bps
     );
     reg [13:0] cnt_first,cnt_second;
-    always@(posedge clk, negedge rst_n) 
+    always@(posedge clk, posedge rst_n) 
         if( rst_n )
             cnt_first <= 14'd0;
         else if (cnt_first == 14'd1000)
             cnt_first <= 14'd0;
         else
             cnt_first <= cnt_first + 1'b1;
-    always@(posedge clk, negedge rst_n) 
+    always@(posedge clk, posedge rst_n) 
         if( rst_n )
              cnt_second <= 14'd0;
         else if (cnt_second == 14'd100)
