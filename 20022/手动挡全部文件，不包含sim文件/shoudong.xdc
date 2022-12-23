@@ -108,3 +108,7 @@ set_property PACKAGE_PIN J4 [get_ports {state[0]}]
 
 set_property IOSTANDARD LVCMOS33 [get_ports power_now]
 set_property PACKAGE_PIN H4 [get_ports power_now]
+
+set_property PACKAGE_PIN R17 [get_ports power_on]
+set_property IOSTANDARD LVCMOS33 [get_ports power_on]
+
