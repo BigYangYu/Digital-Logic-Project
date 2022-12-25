@@ -21,28 +21,29 @@
 module ManualDrivingMode(
     input clk, //bind to P17 pin (100MHz system clock)
     input rst,
-    input power_input,//输入是必须是�?机状�?
+    input power_input,//输入是必须是开机状态
     input throttle,//油门
     input clutch,//离合
     input brake,
     input reverse,//倒车
     input turn_left_signal,
     input turn_right_signal,
-    output reg [3:0]answer,//依次输出左转，右转，后�??，前进信�?
+    output reg [3:0]answer,//依次输出左转，右转，后退，前进信号
     output  [3:0] state,
-    output reg  power_now//输出小车当前状�??0是�?�电�?1是断�?
+    output reg  power_now//输出小车当前状态0是通电，1是断电
     ); 
+       reg previous;
        reg pre_shift;
         reg [3:0] state1= 4'b0001;
     parameter unstarting=4'b0001, starting=4'b0010, moving=4'b0100,power_off=4'b1000;
-always @(posedge clk ,posedge rst) begin
+always @(posedge clk ,negedge rst) begin
          if(rst)begin
               state1<= 4'b0001;
               power_now<=0;
               end
-       else if(power_input==1'b1)begin
+       else if(power_input==1'b0)begin
           case(state1)
-         4'b0001:casex({clutch,throttle,brake,reverse})//未启�?
+         4'b0001:casex({clutch,throttle,brake,reverse})//未启动
                         4'b000X : state1<=unstarting;
                         4'b001X : state1<=unstarting;
                         4'b010X : state1<=power_off;
@@ -83,7 +84,12 @@ always @(posedge clk ,posedge rst) begin
                         4'b111X : state1<=unstarting;
                endcase
         4'b1000:casex({clutch,throttle,brake,reverse})
-                        4'bXXXX : state1<=power_off;
+                        4'bXXXX :begin if(previous==0)begin
+                                      state1<=unstarting;
+                                      previous<=1;
+                        end         else
+                                      state1<=power_off;
+                                       end
                endcase
          default :
                  state1<=unstarting;
@@ -91,12 +97,13 @@ always @(posedge clk ,posedge rst) begin
           power_now<=state1[3];
           end
         else begin
+          previous<=0;
           state1<=power_off;
           power_now<=state1[3];
         end
        
-end //判断状�??
-always @(state1,turn_left_signal,turn_right_signal,reverse)begin
+end //判断状态
+always @(*)begin
        case(state1)
        unstarting:casex({turn_right_signal,turn_left_signal,reverse})
                         3'bXXX :answer=4'b0000;
