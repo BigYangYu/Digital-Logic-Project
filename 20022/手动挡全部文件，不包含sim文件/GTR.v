@@ -85,14 +85,14 @@ module GTR (input sys_clk,
     .back_detector(back_detector),
     .left_detector(left_detector),
     .right_detector(right_detector),
-    .turn_left_command(~turn_left_signal),
-    .turn_right_command(~turn_right_signal),
-    .go_straight_command(~move_forward_signal),
-    .turn_back_command(~move_backward_signal),
-    .turn_left_signal(answer1[3]),
-    .turn_right_signal(answer1[2]),
-    .move_backward_signal(answer1[1]),
-    .move_forward_signal(answer1[0])
+    .turn_left_command(turn_left_signal),
+    .turn_right_command(turn_right_signal),
+    .go_straight_command(move_forward_signal),
+    .turn_back_command(move_backward_signal),
+    .turn_left(answer1[3]),
+    .turn_right(answer1[2]),
+    .move_backward(answer1[1]),
+    .move_forward(answer1[0])
     );
     record_manual record0(
     .clk(sys_clk),

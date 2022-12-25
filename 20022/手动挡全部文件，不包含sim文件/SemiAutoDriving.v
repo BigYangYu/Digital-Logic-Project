@@ -15,10 +15,10 @@ input turn_right_command,
 input go_straight_command,
 input turn_back_command,
 
-output reg move_forward_signal,
-output reg turn_left_signal,
-output reg turn_right_signal,
-output reg move_backward_signal
+output reg move_forward,
+output reg turn_left,
+output reg turn_right,
+output reg move_backward
 );
 
 reg [2:0] state;
@@ -26,7 +26,7 @@ reg [2:0] state;
 
 reg [31:0] counter;
 wire clk_100hz;
-clk_div_100HZ cl(.clk(clk),.rst(reset),.enable(0),.clk_100HZ(clk_100hz));
+clk_div_100HZ cl(.clk(clk),.clk_100HZ(clk_100hz));
 
 wire [3:0] detectors;
 assign detectors={back_detector,front_detector,left_detector,right_detector};
@@ -36,7 +36,7 @@ always @(posedge clk_100hz) begin
     if (reset) begin
         state<=3'b011;
         counter<=8'b00000000;
-        {move_backward_signal,move_forward_signal,turn_left_signal,turn_right_signal}<=4'b0000;
+        {move_backward,move_forward,turn_left,turn_right}<=4'b0000;
     end
     else if(semi_auto_mode_on==1'b1)begin
         counter<=counter+1'b1;
@@ -103,16 +103,16 @@ always @(posedge clk_100hz) begin
             end
             endcase
             case (state)
-                3'b000:  {move_backward_signal,move_forward_signal,turn_left_signal,turn_right_signal}<=4'b0000;
-                3'b001:  {move_backward_signal,move_forward_signal,turn_left_signal,turn_right_signal}<=4'b0001;
-                3'b010:  {move_backward_signal,move_forward_signal,turn_left_signal,turn_right_signal}<=4'b0010;
-                3'b011:  {move_backward_signal,move_forward_signal,turn_left_signal,turn_right_signal}<=4'b0100;
-                3'b100:  {move_backward_signal,move_forward_signal,turn_left_signal,turn_right_signal}<=4'b0001;
-                default: {move_backward_signal,move_forward_signal,turn_left_signal,turn_right_signal}<={move_backward_signal,move_forward_signal,turn_left_signal,turn_right_signal};
+                3'b000:  {move_backward,move_forward,turn_left,turn_right}<=4'b0000;
+                3'b001:  {move_backward,move_forward,turn_left,turn_right}<=4'b0001;
+                3'b010:  {move_backward,move_forward,turn_left,turn_right}<=4'b0010;
+                3'b011:  {move_backward,move_forward,turn_left,turn_right}<=4'b0100;
+                3'b100:  {move_backward,move_forward,turn_left,turn_right}<=4'b0001;
+                default: {move_backward,move_forward,turn_left,turn_right}<={move_backward,move_forward,turn_left,turn_right};
             endcase
         end 
                  else begin
-                {move_backward_signal,move_forward_signal,turn_left_signal,turn_right_signal}<=4'b0000;
+                {move_backward,move_forward,turn_left,turn_right}<=4'b0000;
          end  
     end
 endmodule

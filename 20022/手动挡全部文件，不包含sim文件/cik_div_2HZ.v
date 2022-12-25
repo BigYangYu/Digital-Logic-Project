@@ -23,16 +23,9 @@
 //  module cik_div_2HZ(input clk,rst,output reg clk_2HZ  );//0信号使能，2hz分频器
  module cik_div_2HZ(input clk,output reg clk_2HZ  );//0信号使能，2hz分频器
 parameter  period = 50_000000;
-
 reg [31:0] div2hz_cnt=0;
-// always@(posedge clk )
-// always@(posedge clk or negedge rst)
 always@(posedge clk )
 begin
-	// if(rst)begin
-	// 	div2hz_cnt=26'd00;
-	// 	end
-	// else if( div2hz_cnt==12500000)
 	if( div2hz_cnt==12500000)
 	begin
 		clk_2HZ=~clk_2HZ;
