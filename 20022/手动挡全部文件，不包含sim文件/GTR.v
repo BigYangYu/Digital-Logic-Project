@@ -43,7 +43,7 @@ module GTR (input sys_clk,
                      input [2:0] mode_signal,
 
                      output  power_now,
-                     output reg   semi_auto_mode_on,
+                     output  change,
                      output [7:0] seg_enable,
                      output[7:0] seg_led1,
                      output [7:0] seg_led2,
@@ -56,13 +56,14 @@ module GTR (input sys_clk,
     wire [3:0] answer1;//半自动挡依次输出左转，右转，后�??，前进信�????
     wire [3:0] state;
     wire [26:0] record;
+    // wire change;
     // wire power_now;
     reg manul_mode_on     ;
-    // reg semi_auto_mode_on = 0;
+    reg semi_auto_mode_on = 0;
     reg auto_mode_on      = 0;
     reg place_barrier_signal;
     reg destroy_barrier_signal;
-    debouncer d0(power_now,power_on,power_off,sys_clk,debounced_power_on);
+    debouncer d0(power_now,power_on,power_off,sys_clk,change,debounced_power_on);
     ManualDrivingMode manual_top(
     .clk(sys_clk),
     .rst(rst_n),
@@ -75,7 +76,8 @@ module GTR (input sys_clk,
     .turn_right_signal(~turn_right_signal),
     .answer(answer),
     .state(state),
-    .power_now(power_now)
+    .power_now(power_now),
+    .change(change)
     );
     SemiAutoDriving auto_driving(
     .clk(sys_clk),
@@ -197,6 +199,7 @@ endmodule
         input power_on,
         input power_off,
         input sys_clk,
+        input change,
         output reg debounced_power_on);
         // get the 100Hz clock first.
         wire debouncer_divclk;
@@ -205,8 +208,8 @@ endmodule
         reg[9:0] cnt = 0;
  
         always @(posedge debouncer_divclk) begin       
-            casex ({power_on,power_off})
-                2'b00:
+            casex ({power_on,power_off,change})
+                3'b00X:
                 // press the power_on button
                 begin
                     case (cnt)
@@ -218,15 +221,20 @@ endmodule
                         end
                     endcase
                 end
-                2'b11:
+                3'b11X:
                 // press the power_off button
                 begin
                     cnt <= 0;
                     debounced_power_on <= 1'b0;
                 end
                 default:
+                if(change==1)begin
+                     cnt <= 0;
+                    debounced_power_on <= 1'b0;
+                end
                 // none of the button is pressed or both of the button is pressed.
-                // At this circumstance, we can NOT  declear whether it is power on or off. 
+                // At this circumstance, we can NOT  declear whether it is power on or off.
+                else 
                  cnt <= 0;
                 // press 2 button at the same time
             endcase

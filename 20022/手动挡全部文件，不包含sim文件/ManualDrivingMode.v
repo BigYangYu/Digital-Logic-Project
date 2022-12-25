@@ -25,9 +25,11 @@ module ManualDrivingMode(
     input throttle,//油门
     input clutch,//离合
     input brake,
+    
     input reverse,//倒车
     input turn_left_signal,
     input turn_right_signal,
+    output reg change,
     output reg [3:0]answer,//依次输出左转，右转，后退，前进信号
     output  [3:0] state,
     output reg  power_now//输出小车当前状态0是通电，1是断电
@@ -40,57 +42,83 @@ always @(posedge clk ,negedge rst) begin
          if(rst)begin
               state1<= 4'b0001;
               power_now<=0;
+              change<=0;
               end
        else if(power_input==1'b0)begin
           case(state1)
          4'b0001:casex({clutch,throttle,brake,reverse})//未启动
-                        4'b000X : state1<=unstarting;
-                        4'b001X : state1<=unstarting;
-                        4'b010X : state1<=power_off;
-                        4'b011X : state1<=unstarting;
-                        4'b10XX : state1<=unstarting;
-                        4'b110X : state1<=starting;
-                        4'b111X : state1<=unstarting;
+                        4'b000X :begin state1<=unstarting;change<=0;
+                        end
+                        4'b001X :begin state1<=unstarting;change<=0;
+                        end
+                        4'b010X : begin state1<=power_off;change<=1;
+                        end
+                        4'b011X : begin state1<=unstarting;change<=0;
+                        end
+                        4'b10XX : begin state1<=unstarting;change<=0;
+                        end
+                        4'b110X : begin state1<=starting;change<=0;
+                        end
+                        4'b111X : begin state1<=unstarting;change<=0;
+                        end
                endcase
         4'b0010:casex({clutch,throttle,brake,reverse})//启动
                         4'b000X :begin
-                                   state1<=starting;pre_shift<=reverse;
+                                   state1<=starting;pre_shift<=reverse;change<=0;
                                    end 
-                        4'b001X : state1<=unstarting;
-                        4'b010X : begin state1<=moving;pre_shift<=reverse;
+                        4'b001X : begin state1<=unstarting;change<=0;
+                        end
+                        4'b010X : begin state1<=moving;pre_shift<=reverse;change<=0;
                                    end
-                        4'b011X : state1<=unstarting;
-                        4'b1X0X : state1<=starting;
-                        4'b1X1X : state1<=unstarting;
-               endcase
+                        4'b011X : begin state1<=unstarting;change<=0;
+                        end
+                        4'b1X0X : begin state1<=starting;change<=0;
+                        end
+                        4'b1X1X : begin state1<=unstarting;change<=0;
+                        end
+                endcase    
        4'b0100:casex({clutch,throttle,brake,reverse})
-                        4'b0000 : state1<=starting;
-                        4'b0010 : state1<=unstarting;
-                        4'b0001 : state1<=power_off;
+                        4'b0000 : begin state1<=starting;change<=0;
+                        end
+                        4'b0010 : begin state1<=unstarting;change<=0;
+                        end
+                        4'b0001 : begin state1<=power_off;change<=1;
+                        end
                         4'b0101 : begin if(pre_shift!=reverse)begin
-                                   state1<=power_off;
+                                   state1<=power_off;change<=1;
                                     end
                                     else begin
-                                    state1<=moving;
+                                    state1<=moving;change<=0;
                                     end
                                  end
-                        4'b0100 : state1<=moving;
-                        4'b0111 : state1<=unstarting;
-                        4'b0110 : state1<=unstarting;
-                        4'b1000 : state1<=starting;
-                        4'b1001 : state1<=starting;
-                        4'b101X : state1<=unstarting;
-                        4'b110X : state1<=starting;
-                        4'b111X : state1<=unstarting;
+                        4'b0100 : begin state1<=moving;change<=0;
+                        end
+                        4'b0111 :begin state1<=unstarting;change<=0;
+                        end
+                        4'b0110 :begin state1<=unstarting;change<=0;
+                        end
+                        4'b1000 : begin state1<=starting;change<=0;
+                        end
+                        4'b1001 : begin state1<=starting;change<=0;
+                        end
+                        4'b101X : begin state1<=unstarting;change<=0;
+                        end
+                        4'b110X : begin state1<=starting;change<=0;
+                        end
+                        4'b111X :begin state1<=unstarting;change<=0;
+                        end
                endcase
         4'b1000:casex({clutch,throttle,brake,reverse})
                         4'bXXXX :begin if(previous==0)begin
                                       state1<=unstarting;
                                       previous<=1;
+                                      change<=0;
                         end         else
                                       state1<=power_off;
+                                      change<=1;
                                        end
                endcase
+       
          default :
                  state1<=unstarting;
           endcase
