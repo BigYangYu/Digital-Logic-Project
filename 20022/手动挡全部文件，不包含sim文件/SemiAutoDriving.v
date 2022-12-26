@@ -23,6 +23,7 @@ output reg move_backward
 
 reg [2:0] state;
 //000 Wait-for-command,001 Turn-Right,010 Turn-Left,011 Go-Straight,100 Go-Back
+reg wall;
 
 reg [31:0] counter;
 wire clk_100hz;
@@ -34,7 +35,8 @@ assign detectors={back_detector,front_detector,left_detector,right_detector};
 
 always @(posedge clk_100hz) begin
     if (reset) begin
-        state<=3'b011;
+        state<=3'b000;
+        wall<=0;
         counter<=8'b00000000;
         {move_backward,move_forward,turn_left,turn_right}<=4'b0000;
     end
@@ -45,63 +47,98 @@ always @(posedge clk_100hz) begin
                 if (go_straight_command) begin
                     state <= 3'b011;
                     counter<=8'b00000000;
+                wall<=0;
                 end
                 else if (turn_right_command) begin
                     state <= 3'b001;
                     counter<=8'b00000000;
+                wall<=0;
                 end
                 else if (turn_left_command) begin
                     state <= 3'b010;
                     counter<=8'b00000000;
+                wall<=0;
                 end
                 else if(turn_back_command) begin
                     state<=3'b100;
                     counter<=8'b00000000;
+                wall<=0;
                 end
             end
             3'b001:begin
                 if (counter>=8'd90) begin
-                    if (front_detector==0) begin
+                    // if (front_detector==0) begin
                         state <= 3'b011;
                         counter<=8'b00000000;
-                    end
+                wall<=0;
+                    // end
                 end
             end
             3'b010:begin
                 if (counter>=8'd90) begin
-                    if (front_detector==0) begin
+                    // if (front_detector==0) begin
                         state <= 3'b011;
                         counter<=8'b00000000;
-                    end
+                wall<=0;
+                    // end
                 end
             end
             3'b011:begin
-                if (counter>=8'd90) begin
-                    if (detectors==4'b0100||detectors==4'b0010||detectors==4'b0001||detectors==4'b01000) begin
-                        state<=3'b000;
-                        counter<=8'b00000000;
-                    end 
-                    else if (detectors==4'b0110) begin                        
-                        state <= 3'b001;
-                        counter<=8'b00000000;   
-                    end 
-                    else if (detectors==4'b0101) begin
-                        state <= 3'b010;
-                        counter<=8'b00000000;
-                    end
-                    else if (detectors==4'b0111) begin
-                        state<=3'b100;
-                        counter<=8'b00000000;
+                if (!wall) begin
+                        if(counter>=8'd45) begin
+                            if (detectors==4'b0100||detectors==4'b0010||detectors==4'b0001||detectors==4'b0000) begin
+                                state<=3'b000;
+                                counter<=8'b00000000;
+                            end 
+                        end
+                        if (detectors==4'b0110) begin
+                            counter<=0;
+                            wall<=1;
+                        end 
+                        else if (detectors==4'b0101) begin
+                            counter<=0;
+                            wall<=1;
+                        end
+                        else if (detectors==4'b0111) begin
+                            counter<=0;
+                            wall<=1;
+                        end
+                        else if(detectors==4'b0100) begin
+                            counter<=0;
+                            wall<=1;
+                        end
+                end
+                else if(wall) begin
+                    if(counter>=8'd00_000_006) begin
+                        if (detectors==4'b0110) begin                      
+                            state <= 3'b001;
+                            counter<=8'b00000000;
+                        end 
+                        else if (detectors==4'b0101) begin
+                            state <= 3'b010;
+                            counter<=8'b00000000;
+                        end
+                        else if (detectors==4'b0111) begin
+                            state<=3'b100;
+                            counter<=8'b00000000;
+                        end
+                        else if(detectors==4'b0100) begin
+                            state<=3'b000;
+                            counter<=8'b00000000;
+                        end
+                        // wall<=0;
                     end
                 end
             end
             3'b100:begin
                 if (counter>=8'd180) begin
                     state <= 3'b011;
-                        counter<=8'b00000000;
+                    counter<=8'b00000000;
+                    wall<=0;
                 end               
             end
             endcase
+
             case (state)
                 3'b000:  {move_backward,move_forward,turn_left,turn_right}<=4'b0000;
                 3'b001:  {move_backward,move_forward,turn_left,turn_right}<=4'b0001;
@@ -111,8 +148,8 @@ always @(posedge clk_100hz) begin
                 default: {move_backward,move_forward,turn_left,turn_right}<={move_backward,move_forward,turn_left,turn_right};
             endcase
         end 
-                 else begin
-                {move_backward,move_forward,turn_left,turn_right}<=4'b0000;
-         end  
+        else begin
+            {move_backward,move_forward,turn_left,turn_right}<=4'b0000;
+        end
     end
 endmodule
