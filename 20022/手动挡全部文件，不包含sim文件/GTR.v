@@ -52,8 +52,9 @@ module GTR (input sys_clk,
                      output front_detector,
                      output right_detector);
     wire debounced_power_on; // when you instaintiate a submodlue, the register type can NOT be used and the wire type should be used.
-    wire [3:0] answer; //手动挡依次输出左转，右转，后�??，前进信�????
-    wire [3:0] answer1;//半自动挡依次输出左转，右转，后�??，前进信�????
+    wire [3:0] answer; //手动挡依次输出左转，右转，后退，前进信号
+    wire [3:0] answer1;//半自动挡依次输出左转，右转，后退，前进信号
+    wire [3:0] answer2;//手动挡依次输出左转，右转，后退，前进信号
     wire [3:0] state;
     wire [26:0] record;
     // wire change;
@@ -61,8 +62,8 @@ module GTR (input sys_clk,
     reg manul_mode_on     ;
     reg semi_auto_mode_on = 0;
     reg auto_mode_on      = 0;
-    reg place_barrier_signal;
-    reg destroy_barrier_signal;
+    wire place_barrier_signal;
+    wire destroy_barrier_signal;
     debouncer d0(power_now,power_on,power_off,sys_clk,change,debounced_power_on);
     ManualDrivingMode manual_top(
     .clk(sys_clk),
@@ -79,7 +80,7 @@ module GTR (input sys_clk,
     .power_now(power_now),
     .change(change)
     );
-    SemiAutoDriving auto_driving(
+    SemiAutoDriving sem_auto_driving(
     .clk(sys_clk),
     .reset(rst_n),
     .semi_auto_mode_on(semi_auto_mode_on),
@@ -95,6 +96,21 @@ module GTR (input sys_clk,
     .turn_right(answer1[2]),
     .move_backward(answer1[1]),
     .move_forward(answer1[0])
+    );
+    Auto_Driving auto_driving(
+    .clk(sys_clk),
+    .reset(rst_n),
+    .auto_mode_on(auto_mode_on),
+    .front_detector(front_detector),
+    .back_detector(back_detector),
+    .left_detector(left_detector),
+    .right_detector(right_detector),
+    .place_barrier_signal(place_barrier_signal),
+    .destroy_barrier_signal(destroy_barrier_signal),
+    .turn_left(answer2[3]),
+    .turn_right(answer2[2]),
+    .move_backward(answer2[1]),
+    .move_forward(answer2[0])
     );
     record_manual record0(
     .clk(sys_clk),
@@ -126,11 +142,11 @@ module GTR (input sys_clk,
     sys_clk,
     rx,
     tx,
-    ((answer[3]&manul_mode_on)||(answer1[3]&semi_auto_mode_on)),
-     ((answer[2]&manul_mode_on)||(answer1[2]&semi_auto_mode_on)),
+    ((answer[3]&manul_mode_on)||(answer1[3]&semi_auto_mode_on)||(answer2[3]&auto_mode_on)),
+     ((answer[2]&manul_mode_on)||(answer1[2]&semi_auto_mode_on)||(answer2[2]&auto_mode_on)),
      
-       ((answer[0]&manul_mode_on)||(answer1[0]&semi_auto_mode_on)),
-        ((answer[1]&manul_mode_on)||(answer1[1]&semi_auto_mode_on)),
+       ((answer[0]&manul_mode_on)||(answer1[0]&semi_auto_mode_on)||(answer2[0]&auto_mode_on)),
+        ((answer[1]&manul_mode_on)||(answer1[1]&semi_auto_mode_on)||(answer2[1]&auto_mode_on)),
     place_barrier_signal,destroy_barrier_signal,
     front_detector,back_detector,left_detector,right_detector);   // NOT revised the bug in simulation.
     

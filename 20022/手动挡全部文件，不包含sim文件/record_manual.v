@@ -36,7 +36,7 @@ module record_manual(//我设计的是每0.5s里程加一
         );
 
      always@(negedge clk_2hz )begin
-           if(rst||record==27'd999_9999)begin
+           if(power_now||rst||record==27'd999_9999)begin
                 record<=0;
             end
             else if(state==4'b0100) begin
