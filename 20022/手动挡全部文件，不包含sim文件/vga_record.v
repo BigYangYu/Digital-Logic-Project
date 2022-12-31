@@ -43,35 +43,35 @@ module vga_record (input has_record,
         case (has_record)
             1'b1:
             begin
-                if ((hc > = hbp+nums_xs1)&&(hc < hbp+nums_xe1)&&(vc > = vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
+                if ((hc >= hbp+nums_xs1)&&(hc < hbp+nums_xe1)&&(vc >= vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
                     digit = led7;
                     has_num = words[vc-vbp-nums_ys][hc-hbp-nums_xs1]
                 end
-                else if ((hc > = hbp+nums_xs2)&&(hc < hbp+nums_xe2)&&(vc > = vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
+                else if ((hc >= hbp+nums_xs2)&&(hc < hbp+nums_xe2)&&(vc >= vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
                     digit = led6;
                     has_num = words[vc-vbp-nums_ys][hc-hbp-nums_xs2]
                 end
-                else if ((hc > = hbp+nums_xs3)&&(hc < hbp+nums_xe3)&&(vc > = vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
+                else if ((hc >= hbp+nums_xs3)&&(hc < hbp+nums_xe3)&&(vc >= vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
                     digit = led5;
                     has_num = words[vc-vbp-nums_ys][hc-hbp-nums_xs3]
                 end
-                else if ((hc > = hbp+nums_xs4)&&(hc < hbp+nums_xe4)&&(vc > = vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
+                else if ((hc >= hbp+nums_xs4)&&(hc < hbp+nums_xe4)&&(vc >= vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
                     digit = led4;
                     has_num = words[vc-vbp-nums_ys][hc-hbp-nums_xs4]
                 end
-                else if ((hc > = hbp+nums_xs5)&&(hc < hbp+nums_xe5)&&(vc > = vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
+                else if ((hc >= hbp+nums_xs5)&&(hc < hbp+nums_xe5)&&(vc >= vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
                     digit = led3;
                     has_num = words[vc-vbp-nums_ys][hc-hbp-nums_xs5]
                 end
-                else if ((hc > = hbp+nums_xs6)&&(hc < hbp+nums_xe6)&&(vc > = vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
+                else if ((hc >= hbp+nums_xs6)&&(hc < hbp+nums_xe6)&&(vc >= vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
                     digit = led2;
                     has_num = words[vc-vbp-nums_ys][hc-hbp-nums_xs6]
                 end
-                else if ((hc > = hbp+nums_xs7)&&(hc < hbp+nums_xe7)&&(vc > = vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
+                else if ((hc >= hbp+nums_xs7)&&(hc < hbp+nums_xe7)&&(vc >= vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
                     digit = led1;
                     has_num = words[vc-vbp-nums_ys][hc-hbp-nums_xs7]
                 end
-                else if ((hc > = hbp+nums_xs8)&&(hc < hbp+nums_xe8)&&(vc > = vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
+                else if ((hc >= hbp+nums_xs8)&&(hc < hbp+nums_xe8)&&(vc >= vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
                     digit = 0;
                     has_num = words[vc-vbp-nums_ys][hc-hbp-nums_xs8]
                 end
