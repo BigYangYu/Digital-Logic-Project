@@ -50,7 +50,13 @@ module GTR (input sys_clk,
                      output back_detector,
                      output left_detector,
                      output front_detector,
-                     output right_detector);
+                     output right_detector,
+                     output [3:0] red,
+                    output [3:0] green,
+                    output [3:0] blue, 
+                     output hsync,
+                     output vsync,
+                     );
     wire debounced_power_on; // when you instaintiate a submodlue, the register type can NOT be used and the wire type should be used.
     wire [3:0] answer; //手动挡依次输出左转，右转，后退，前进信号
     wire [3:0] answer1;//半自动挡依次输出左转，右转，后退，前进信号
@@ -149,7 +155,21 @@ module GTR (input sys_clk,
         ((answer[1]&manul_mode_on)||(answer1[1]&semi_auto_mode_on)||(answer2[1]&auto_mode_on)),
     place_barrier_signal,destroy_barrier_signal,
     front_detector,back_detector,left_detector,right_detector);   // NOT revised the bug in simulation.
-    
+    vga vga(
+    sys_clk,
+    debounced_power_on,
+    manul_mode_on,
+    semi_auto_mode_on,
+    auto_mode_on,
+    record,
+    power_now,
+    rst_n,
+    hsync,
+    vsync,
+    red,
+    green,
+    blue
+    );
     always @(*) begin
             
 

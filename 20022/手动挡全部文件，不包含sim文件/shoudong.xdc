@@ -1,3 +1,18 @@
+set_property -dict {PACKAGE_PIN D7 IOSTANDARD LVCMOS33} [get_ports hsync]
+set_property -dict {PACKAGE_PIN C4 IOSTANDARD LVCMOS33} [get_ports {vsync}]
+#///////////////////////////////////////VGA�������ź�//////////////////////////////////
+set_property -dict {PACKAGE_PIN F5 IOSTANDARD LVCMOS33} [get_ports {red[0]}]
+set_property -dict {PACKAGE_PIN C6 IOSTANDARD LVCMOS33} [get_ports {red[1]}]
+set_property -dict {PACKAGE_PIN C5 IOSTANDARD LVCMOS33} [get_ports {red[2]}]
+set_property -dict {PACKAGE_PIN B7 IOSTANDARD LVCMOS33} [get_ports {red[3]}]
+set_property -dict {PACKAGE_PIN B6 IOSTANDARD LVCMOS33} [get_ports {green[0]}]
+set_property -dict {PACKAGE_PIN A6 IOSTANDARD LVCMOS33} [get_ports {green[1]}]
+set_property -dict {PACKAGE_PIN A5 IOSTANDARD LVCMOS33} [get_ports {green[2]}]
+set_property -dict {PACKAGE_PIN D8 IOSTANDARD LVCMOS33} [get_ports {green[3]}]
+set_property -dict {PACKAGE_PIN C7 IOSTANDARD LVCMOS33} [get_ports {blue[0]}]
+set_property -dict {PACKAGE_PIN E6 IOSTANDARD LVCMOS33} [get_ports {blue[1]}]
+set_property -dict {PACKAGE_PIN E5 IOSTANDARD LVCMOS33} [get_ports {blue[2]}]
+set_property -dict {PACKAGE_PIN E7 IOSTANDARD LVCMOS33} [get_ports {blue[3]}]
 
 set_property IOSTANDARD LVCMOS33 [get_ports rx]
 set_property IOSTANDARD LVCMOS33 [get_ports sys_clk]
