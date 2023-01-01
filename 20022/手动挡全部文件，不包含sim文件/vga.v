@@ -109,7 +109,7 @@ module vga_top (input clk,
     end
     
     always @(*) begin
-        if ((hc > = hbp) && (hc < = hfp) && (vc > = vbp) && (vc < = vfp))
+        if ((hc >= hbp) && (hc < = hfp) && (vc >= vbp) && (vc < = vfp))
         begin
             can_be_colored = 1'b1;
         end
@@ -121,7 +121,7 @@ module vga_top (input clk,
     always @(*) begin
         case (debounced_power_on)
             0: begin
-                if ((hc > = hbp+state_xs)&&(hc < hbp+state_xe)&&(vc > = vbp+state_ys)&&(vc < vbp+state_ye))
+                if ((hc >= hbp+state_xs)&&(hc < hbp+state_xe)&&(vc >= vbp+state_ys)&&(vc < vbp+state_ye))
                 begin
                     has_num = 1;
                     x       = hc-hbp-state_xs;
@@ -137,7 +137,7 @@ module vga_top (input clk,
                 case ({manul_mode_on,semi_auto_mode_on,auto_mode_on})
                     3'b100:
                     begin
-                        if ((hc > = hbp+state_xs)&&(hc < hbp+state_xe)&&(vc > = vbp+state_ys)&&(vc < vbp+state_ye))
+                        if ((hc >= hbp+state_xs)&&(hc < hbp+state_xe)&&(vc >= vbp+state_ys)&&(vc < vbp+state_ye))
                         begin
                             x       = hc-hbp-state_xs;
                             y       = vc-vbp-state_ys;
@@ -158,49 +158,49 @@ module vga_top (input clk,
                                 led2 = (record/10)%10;
                                 led1 = record%10;
 
-                                if ((hc > = hbp+nums_xs1)&&(hc < hbp+nums_xe1)&&(vc > = vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
+                                if ((hc >= hbp+nums_xs1)&&(hc < hbp+nums_xe1)&&(vc >= vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
                                     digit   = led7;
                                     x       = hc-hbp-nums_xs1;
                                     y       = vc-vbp-nums_ys;
                                     has_num = 1;
                                 end
-                                else if ((hc > = hbp+nums_xs2)&&(hc < hbp+nums_xe2)&&(vc > = vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
+                                else if ((hc >= hbp+nums_xs2)&&(hc < hbp+nums_xe2)&&(vc >= vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
                                     digit   = led6;
                                     x       = hc-hbp-nums_xs2;
                                     y       = vc-vbp-nums_ys;
                                     has_num = 1;
                                     end
-                                    else if ((hc > = hbp+nums_xs3)&&(hc < hbp+nums_xe3)&&(vc > = vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
+                                    else if ((hc >= hbp+nums_xs3)&&(hc < hbp+nums_xe3)&&(vc >= vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
                                     digit   = led5;
                                     x       = hc-hbp-nums_xs3;
                                     y       = vc-vbp-nums_ys;
                                     has_num = 1;
                                     end
-                                    else if ((hc > = hbp+nums_xs4)&&(hc < hbp+nums_xe4)&&(vc > = vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
+                                    else if ((hc >= hbp+nums_xs4)&&(hc < hbp+nums_xe4)&&(vc >= vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
                                     digit   = led4;
                                     x       = hc-hbp-nums_xs4;
                                     y       = vc-vbp-nums_ys;
                                     has_num = 1;
                                     end
-                                    else if ((hc > = hbp+nums_xs5)&&(hc < hbp+nums_xe5)&&(vc > = vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
+                                    else if ((hc >= hbp+nums_xs5)&&(hc < hbp+nums_xe5)&&(vc >= vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
                                     digit   = led3;
                                     x       = hc-hbp-nums_xs5;
                                     y       = vc-vbp-nums_ys;
                                     has_num = 1;
                                     end
-                                    else if ((hc > = hbp+nums_xs6)&&(hc < hbp+nums_xe6)&&(vc > = vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
+                                    else if ((hc >= hbp+nums_xs6)&&(hc < hbp+nums_xe6)&&(vc >= vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
                                     digit   = led2;
                                     x       = hc-hbp-nums_xs6;
                                     y       = vc-vbp-nums_ys;
                                     has_num = 1;
                                     end
-                                    else if ((hc > = hbp+nums_xs7)&&(hc < hbp+nums_xe7)&&(vc > = vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
+                                    else if ((hc >= hbp+nums_xs7)&&(hc < hbp+nums_xe7)&&(vc >= vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
                                     digit   = led1;
                                     x       = hc-hbp-nums_xs7;
                                     y       = vc-vbp-nums_ys;
                                     has_num = 1;
                                     end
-                                    else if ((hc > = hbp+nums_xs8)&&(hc < hbp+nums_xe8)&&(vc > = vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
+                                    else if ((hc >= hbp+nums_xs8)&&(hc < hbp+nums_xe8)&&(vc >= vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
                                     digit   = 0;
                                     x       = hc-hbp-nums_xs8;
                                     y       = vc-vbp-nums_ys;
@@ -216,7 +216,7 @@ module vga_top (input clk,
                     3'b010:
                     begin
                         has_record = 0;
-                        if ((hc > = hbp+state_xs)&&(hc < hbp+state_xe)&&(vc > = vbp+state_ys)&&(vc < vbp+state_ye))
+                        if ((hc >= hbp+state_xs)&&(hc < hbp+state_xe)&&(vc >= vbp+state_ys)&&(vc < vbp+state_ye))
                         begin
                             x       = hc-hbp-state_xs;
                             y       = vc-vbp-state_ys;
@@ -231,7 +231,7 @@ module vga_top (input clk,
                     3'b001:
                     begin
                         has_record = 0;
-                        if ((hc > = hbp+state_xs)&&(hc < hbp+state_xe)&&(vc > = vbp+state_ys)&&(vc < vbp+state_ye))
+                        if ((hc >= hbp+state_xs)&&(hc < hbp+state_xe)&&(vc >= vbp+state_ys)&&(vc < vbp+state_ye))
                         begin
                             x       = hc-hbp-state_xs;
                             y       = vc-vbp-state_ys;
