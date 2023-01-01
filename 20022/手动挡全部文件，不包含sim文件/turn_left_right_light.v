@@ -24,8 +24,8 @@ module turn_left_right_light(
                              input rst,
                              input clk,
                              input power_now,
-                             input [3:0] state,//小车状态0001是未启动，0010是starting，0100是moving，1000是断电
-                             input [3:0]answer,//左转，右转，后退，前进信号
+                             input [3:0] state,//小车状�??0001是未启动�?0010是starting�?0100是moving�?1000是断�?
+                             input [3:0]answer,//左转，右转，后�??，前进信�?
                              output reg left_led,
                              output reg right_led
                             
@@ -38,7 +38,6 @@ module turn_left_right_light(
   reg [1:0] temp;
           cik_div_2HZ manual_record(
                                     .clk(clk),
-                                    .rst(rst),
                                     .clk_2HZ(clk_2hz)
         );
 

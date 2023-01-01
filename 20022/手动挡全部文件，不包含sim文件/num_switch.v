@@ -2,7 +2,7 @@ module num_switch (
     input [3:0] digit,
     input [4:0]y,
     input [4:0]x,
-    output has_color
+    output reg has_color
 );
 reg [19:0] num_line;
 always @(*) begin
@@ -379,7 +379,7 @@ always @(*) begin
                     default: num_line=20'b00000000000000000000;
                 endcase
             end
-            default: num_line=20'b00000000000000000000
+            default: num_line=20'b00000000000000000000;
         endcase
     end
     always @(*) begin

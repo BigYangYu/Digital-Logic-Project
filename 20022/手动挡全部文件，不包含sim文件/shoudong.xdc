@@ -137,10 +137,10 @@ set_property IOSTANDARD LVCMOS33 [get_ports move_forward_signal]
 set_property IOSTANDARD LVCMOS33 [get_ports turn_right_signal]
 
 
-set_property PACKAGE_PIN M1 [get_ports semi_auto_mode_on]
-set_property IOSTANDARD LVCMOS33 [get_ports semi_auto_mode_on]
-set_property PACKAGE_PIN L1 [get_ports power_now]
-set_property IOSTANDARD LVCMOS33 [get_ports power_now]
+#set_property PACKAGE_PIN M1 [get_ports semi_auto_mode_on]
+#set_property IOSTANDARD LVCMOS33 [get_ports semi_auto_mode_on]
+#set_property PACKAGE_PIN L1 [get_ports power_now]
+#set_property IOSTANDARD LVCMOS33 [get_ports power_now]
 
 set_property PACKAGE_PIN R17 [get_ports  move_backward_signal]
 set_property IOSTANDARD LVCMOS33 [get_ports  move_backward_signal]
