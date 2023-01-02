@@ -4,7 +4,7 @@ module vga_top (input clk,
                 input manul_mode_on,
                 input semi_auto_mode_on,
                 input auto_mode_on,
-                input record,
+                input [26:0]record,
                 input power_now,
                 input rst_n,
                 output reg hsync,
@@ -20,10 +20,11 @@ module vga_top (input clk,
     wire clk25;
     reg [3:0] digit; // store the current digit to display
     // x y store the coordinate in the valid zone
-    reg x;
-    reg y;
+    reg [9:0]x;
+    reg [9:0]y;
     reg [1:0] clk_counter;
     reg can_be_colored;
+    wire clk_vga;
     num_switch num_switch(
     clk_vga,
     has_record,
@@ -71,8 +72,8 @@ module vga_top (input clk,
     assign clk_vga = clk_counter[1];
 
     // get the valid sign, storing if the current coordinate is okay to display color.
-    reg valid_yr;       //行显示有效信号 only when ycnt in [32,510] it is 1.
-    always @(posedge clk_vga )//480行
+    reg valid_yr;       //行显示有效信�? only when ycnt in [32,510] it is 1.
+    always @(posedge clk_vga )//480�?
         begin
            if(vc==10'd32)
                 valid_yr<=1'b1;
@@ -81,7 +82,7 @@ module vga_top (input clk,
         end
     wire valid_y=valid_yr;   
     reg valid_r;
-    always @(posedge clk_vga )//640列
+    always @(posedge clk_vga )//640�?
         begin
             if((hc==10'd141)&&valid_y)
                 valid_r<=1'b1;
@@ -221,7 +222,7 @@ module vga_top (input clk,
                                     color_index <= 3'b111;
                                     end
                                     else if ((hc >= hbp+nums_xs8)&&(hc < hbp+nums_xe8)&&(vc >= vbp+nums_ys)&&(vc < vbp+nums_ye)) begin
-                                    digit   <= 0;
+                                    digit   <= 4'b0;
                                     x       <= hc-hbp-nums_xs8;
                                     y       <= vc-vbp-nums_ys;
                                     color_index <= 3'b111;
